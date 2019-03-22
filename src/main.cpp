@@ -5,7 +5,12 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QDir>
-#include <QPalette>
+
+// Minimum width of the window
+#define WINDOW_MIN_WIDTH 380
+
+// The base style for the whole project
+#define BASE_STYLE "background-color: #373751; color: #1e2b34"
 
 int main(int argc, char *argv[])
 {
@@ -27,13 +32,9 @@ int main(int argc, char *argv[])
 
     Player player;
 
-    // QPalette pal;
 
-    // // set black background
-    // pal.setColor(QPalette::Background, Qt::black);
-    // player.setAutoFillBackground(true);
-    // player.setPalette(pal);
-    player.setStyleSheet("background-color: #373751; color: #1e2b34");
+    player.setStyleSheet(BASE_STYLE);
+    player.setMinimumWidth(WINDOW_MIN_WIDTH);
 
     if (parser.isSet(customAudioRoleOption))
         player.setCustomAudioRole(parser.value(customAudioRoleOption));

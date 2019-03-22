@@ -21,13 +21,11 @@ public:
     QMediaPlayer::State state() const;
     int volume() const;
     bool isMuted() const;
-    qreal playbackRate() const;
 
 public slots:
     void setState(QMediaPlayer::State state);
     void setVolume(int volume);
     void setMuted(bool muted);
-    void setPlaybackRate(float rate);
 
 signals:
     void play();
@@ -37,24 +35,23 @@ signals:
     void previous();
     void changeVolume(int volume);
     void changeMuting(bool muting);
-    void changeRate(qreal rate);
 
 private slots:
     void playClicked();
+    void pauseClicked();
     void muteClicked();
-    void updateRate();
     void onVolumeSliderValueChanged();
 
 private:
     QMediaPlayer::State m_playerState = QMediaPlayer::StoppedState;
     bool m_playerMuted = false;
     QAbstractButton *m_playButton = nullptr;
+    QAbstractButton *m_pauseButton = nullptr;
     QAbstractButton *m_stopButton = nullptr;
     QAbstractButton *m_nextButton = nullptr;
     QAbstractButton *m_previousButton = nullptr;
     QAbstractButton *m_muteButton = nullptr;
     QAbstractSlider *m_volumeSlider = nullptr;
-    QComboBox *m_rateBox = nullptr;
 };
 
 #endif // PLAYERCONTROLS_H

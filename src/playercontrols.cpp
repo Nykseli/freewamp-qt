@@ -16,6 +16,11 @@ PlayerControls::PlayerControls(QWidget *parent)
 
     connect(m_playButton, &QAbstractButton::clicked, this, &PlayerControls::playClicked);
 
+    m_pauseButton = new QToolButton(this);
+    m_pauseButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
+
+    connect(m_pauseButton, &QAbstractButton::clicked, this, &PlayerControls::pauseClicked);
+
     m_stopButton = new QToolButton(this);
     m_stopButton->setIcon(style()->standardIcon(QStyle::SP_MediaStop));
     m_stopButton->setEnabled(false);
@@ -42,23 +47,15 @@ PlayerControls::PlayerControls(QWidget *parent)
 
     connect(m_volumeSlider, &QSlider::valueChanged, this, &PlayerControls::onVolumeSliderValueChanged);
 
-    m_rateBox = new QComboBox(this);
-    m_rateBox->addItem("0.5x", QVariant(0.5));
-    m_rateBox->addItem("1.0x", QVariant(1.0));
-    m_rateBox->addItem("2.0x", QVariant(2.0));
-    m_rateBox->setCurrentIndex(1);
-
-    connect(m_rateBox, QOverload<int>::of(&QComboBox::activated), this, &PlayerControls::updateRate);
-
     QBoxLayout *layout = new QHBoxLayout;
     layout->setMargin(0);
-    layout->addWidget(m_stopButton);
     layout->addWidget(m_previousButton);
     layout->addWidget(m_playButton);
+    layout->addWidget(m_pauseButton);
+    layout->addWidget(m_stopButton);
     layout->addWidget(m_nextButton);
     layout->addWidget(m_muteButton);
     layout->addWidget(m_volumeSlider);
-    layout->addWidget(m_rateBox);
     setLayout(layout);
 }
 
@@ -75,15 +72,12 @@ void PlayerControls::setState(QMediaPlayer::State state)
         switch (state) {
         case QMediaPlayer::StoppedState:
             m_stopButton->setEnabled(false);
-            m_playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
             break;
         case QMediaPlayer::PlayingState:
             m_stopButton->setEnabled(true);
-            m_playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPause));
             break;
         case QMediaPlayer::PausedState:
             m_stopButton->setEnabled(true);
-            m_playButton->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
             break;
         }
     }
@@ -136,32 +130,16 @@ void PlayerControls::playClicked()
     }
 }
 
+void PlayerControls::pauseClicked()
+{
+    if (m_playerState == QMediaPlayer::PlayingState) {
+        emit pause();
+    }
+}
+
 void PlayerControls::muteClicked()
 {
     emit changeMuting(!m_playerMuted);
-}
-
-qreal PlayerControls::playbackRate() const
-{
-    return m_rateBox->itemData(m_rateBox->currentIndex()).toDouble();
-}
-
-void PlayerControls::setPlaybackRate(float rate)
-{
-    for (int i = 0; i < m_rateBox->count(); ++i) {
-        if (qFuzzyCompare(rate, float(m_rateBox->itemData(i).toDouble()))) {
-            m_rateBox->setCurrentIndex(i);
-            return;
-        }
-    }
-
-    m_rateBox->addItem(QString("%1x").arg(rate), QVariant(rate));
-    m_rateBox->setCurrentIndex(m_rateBox->count() - 1);
-}
-
-void PlayerControls::updateRate()
-{
-    emit changeRate(playbackRate());
 }
 
 void PlayerControls::onVolumeSliderValueChanged()

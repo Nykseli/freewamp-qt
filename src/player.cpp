@@ -52,16 +52,10 @@ Player::Player(QWidget *parent)
 
     m_labelHistogram = new QLabel(this);
     m_labelHistogram->setText("Histogram:");
-    m_videoHistogram = new HistogramWidget(this);
     m_audioHistogram = new HistogramWidget(this);
     QHBoxLayout *histogramLayout = new QHBoxLayout;
     histogramLayout->addWidget(m_labelHistogram);
-    histogramLayout->addWidget(m_videoHistogram, 1);
     histogramLayout->addWidget(m_audioHistogram, 2);
-
-    m_videoProbe = new QVideoProbe(this);
-    connect(m_videoProbe, &QVideoProbe::videoFrameProbed, m_videoHistogram, &HistogramWidget::processFrame);
-    m_videoProbe->setSource(m_player);
 
     m_audioProbe = new QAudioProbe(this);
     connect(m_audioProbe, &QAudioProbe::audioBufferProbed, m_audioHistogram, &HistogramWidget::processBuffer);
@@ -83,15 +77,10 @@ Player::Player(QWidget *parent)
     connect(controls, &PlayerControls::previous, this, &Player::previousClicked);
     connect(controls, &PlayerControls::changeVolume, m_player, &QMediaPlayer::setVolume);
     connect(controls, &PlayerControls::changeMuting, m_player, &QMediaPlayer::setMuted);
-    connect(controls, &PlayerControls::changeRate, m_player, &QMediaPlayer::setPlaybackRate);
-    // connect(controls, &PlayerControls::stop, m_videoWidget, QOverload<>::of(&QVideoWidget::update));
 
     connect(m_player, &QMediaPlayer::stateChanged, controls, &PlayerControls::setState);
     connect(m_player, &QMediaPlayer::volumeChanged, controls, &PlayerControls::setVolume);
     connect(m_player, &QMediaPlayer::mutedChanged, controls, &PlayerControls::setMuted);
-
-    m_fullScreenButton = new QPushButton(tr("FullScreen"), this);
-    m_fullScreenButton->setCheckable(true);
 
     QBoxLayout *displayLayout = new QHBoxLayout;
     // displayLayout->addWidget(m_videoWidget, 2);
@@ -103,17 +92,16 @@ Player::Player(QWidget *parent)
     controlLayout->addStretch(1);
     controlLayout->addWidget(controls);
     controlLayout->addStretch(1);
-    controlLayout->addWidget(m_fullScreenButton);
-    controlLayout->addWidget(m_colorButton);
 
     QBoxLayout *layout = new QVBoxLayout;
-    layout->addLayout(displayLayout);
     QHBoxLayout *hLayout = new QHBoxLayout;
     hLayout->addWidget(m_slider);
     hLayout->addWidget(m_labelDuration);
     layout->addLayout(hLayout);
     layout->addLayout(controlLayout);
     layout->addLayout(histogramLayout);
+    layout->addLayout(displayLayout);
+
 #if defined(Q_OS_QNX)
     // On QNX, the main window doesn't have a title bar (or any other decorations).
     // Create a status bar for the status information instead.
@@ -303,22 +291,6 @@ void Player::bufferingProgress(int progress)
     else
         setStatusInfo(tr("Buffering %1%").arg(progress));
 }
-
-// void Player::videoAvailableChanged(bool available)
-// {
-//     if (!available) {
-//         disconnect(m_fullScreenButton, &QPushButton::clicked, m_videoWidget, &QVideoWidget::setFullScreen);
-//         disconnect(m_videoWidget, &QVideoWidget::fullScreenChanged, m_fullScreenButton, &QPushButton::setChecked);
-//         m_videoWidget->setFullScreen(false);
-//     } else {
-//         connect(m_fullScreenButton, &QPushButton::clicked, m_videoWidget, &QVideoWidget::setFullScreen);
-//         connect(m_videoWidget, &QVideoWidget::fullScreenChanged, m_fullScreenButton, &QPushButton::setChecked);
-
-//         if (m_fullScreenButton->isChecked())
-//             m_videoWidget->setFullScreen(true);
-//     }
-//     m_colorButton->setEnabled(available);
-// }
 
 void Player::setTrackInfo(const QString &info)
 {
