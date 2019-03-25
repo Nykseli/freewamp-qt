@@ -1,5 +1,7 @@
 
 #include "playlistmodel.h"
+#include "metadata.h"
+#include <iostream>
 
 #include <QFileInfo>
 #include <QUrl>
@@ -46,7 +48,25 @@ QVariant PlaylistModel::data(const QModelIndex &index, int role) const
         QVariant value = m_data[index];
         if (!value.isValid() && index.column() == Title) {
             QUrl location = m_playlist->media(index.row()).canonicalUrl();
-            return QFileInfo(location.path()).fileName();
+            Metadata data(location.path());
+            QString name;
+            if (data.artist.isEmpty()) {
+                name += "Unknown artist";
+            } else {
+                name += data.artist;
+            }
+
+            // Add the <artist> - <song name> formatting
+            name += " - ";
+
+            if (data.title.isEmpty()) {
+                name += "Unknown title";
+            } else {
+                name += data.title;
+            }
+
+            value = name;
+
         }
 
         return value;
