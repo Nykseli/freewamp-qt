@@ -252,7 +252,13 @@ void Player::statusChanged(QMediaPlayer::MediaStatus status)
         break;
     case QMediaPlayer::BufferingMedia:
     case QMediaPlayer::BufferedMedia:
-        setStatusInfo(tr("Buffering %1%").arg(m_player->bufferStatus()));
+        {
+            // Only show te buffering when its under 100%
+            if (m_player->bufferStatus() < 100)
+                setStatusInfo(tr("Buffering %1%").arg(m_player->bufferStatus()));
+            else
+                setStatusInfo(tr(""));
+        }
         break;
     case QMediaPlayer::StalledMedia:
         setStatusInfo(tr("Stalled %1%").arg(m_player->bufferStatus()));
@@ -288,8 +294,13 @@ void Player::bufferingProgress(int progress)
 {
     if (m_player->mediaStatus() == QMediaPlayer::StalledMedia)
         setStatusInfo(tr("Stalled %1%").arg(progress));
-    else
-        setStatusInfo(tr("Buffering %1%").arg(progress));
+    else {
+        // Show Buffering progress only when its under 100
+        if (progress < 100)
+            setStatusInfo(tr("Buffering %1%").arg(progress));
+        else
+            setStatusInfo(QString(""));
+    }
 }
 
 void Player::setTrackInfo(const QString &info)
