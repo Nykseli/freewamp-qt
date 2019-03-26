@@ -59,4 +59,7 @@ compile_commands.json
 build/
 player
 
+# FFmpeg libraries
+ffmpeg/
+
 
