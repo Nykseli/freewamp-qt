@@ -4,6 +4,8 @@
 #include "playlistmodel.h"
 #include "histogramwidget.h"
 
+#include "keyboardevent.h"
+
 #include <QMediaService>
 #include <QMediaPlaylist>
 #include <QVideoProbe>
@@ -65,7 +67,7 @@ Player::Player(QWidget *parent)
 
     connect(openButton, &QPushButton::clicked, this, &Player::open);
 
-    PlayerControls *controls = new PlayerControls(this);
+    controls = new PlayerControls(this);
     controls->setState(m_player->state());
     controls->setVolume(m_player->volume());
     controls->setMuted(controls->isMuted());
@@ -359,4 +361,10 @@ void Player::clearHistogram()
 {
     QMetaObject::invokeMethod(m_videoHistogram, "processFrame", Qt::QueuedConnection, Q_ARG(QVideoFrame, QVideoFrame()));
     QMetaObject::invokeMethod(m_audioHistogram, "processBuffer", Qt::QueuedConnection, Q_ARG(QAudioBuffer, QAudioBuffer()));
+}
+
+void Player::setKeyboardEventListener(KeyboardEvent *event) {
+    this->k_event = event;
+    // Bind the controls to event listener
+    this->k_event->setControls(controls);
 }

@@ -25,7 +25,10 @@ public:
 public slots:
     void setState(QMediaPlayer::State state);
     void setVolume(int volume);
+    void increaseVolume(int amount);
+    void decreaseVolume(int amount);
     void setMuted(bool muted);
+    void togglePlayPause();
 
 signals:
     void play();

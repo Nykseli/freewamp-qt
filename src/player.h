@@ -2,6 +2,8 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include "keyboardevent.h"
+
 #include <QWidget>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
@@ -35,6 +37,8 @@ public:
     void addToPlaylist(const QList<QUrl> &urls);
     void setCustomAudioRole(const QString &role);
 
+    void setKeyboardEventListener(KeyboardEvent *event);
+
 signals:
     void fullScreenChanged(bool fullScreen);
 
@@ -63,6 +67,8 @@ private:
     void handleCursor(QMediaPlayer::MediaStatus status);
     void updateDurationInfo(qint64 currentInfo);
 
+    PlayerControls *controls;
+
     QMediaPlayer *m_player = nullptr;
     QMediaPlaylist *m_playlist = nullptr;
     QVideoWidget *m_videoWidget = nullptr;
@@ -86,6 +92,9 @@ private:
     QString m_trackInfo;
     QString m_statusInfo;
     qint64 m_duration;
+
+    KeyboardEvent *k_event;
+
 };
 
 #endif // PLAYER_H

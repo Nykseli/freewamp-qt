@@ -28,14 +28,16 @@ HEADERS = \
     src/playercontrols.h \
     src/playlistmodel.h \
     src/histogramwidget.h\
-    src/metadata.h
+    src/metadata.h \
+    src/keyboardevent.h
 
 SOURCES = src/main.cpp \
     src/player.cpp \
     src/playercontrols.cpp \
     src/playlistmodel.cpp \
     src/histogramwidget.cpp \
-    src/metadata.cpp
+    src/metadata.cpp \
+    src/keyboardevent.cpp
 
 target.path = player
 

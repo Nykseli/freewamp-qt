@@ -101,6 +101,26 @@ void PlayerControls::setVolume(int volume)
     m_volumeSlider->setValue(qRound(logarithmicVolume * 100));
 }
 
+#include <iostream>
+
+void PlayerControls::increaseVolume(int amount) {
+    // Make sure volume slider has focus so we can change it's value
+    m_volumeSlider->setFocus();
+    const int c_volume = volume();
+    int volume = (c_volume + amount) >= 100 ? 100 : c_volume + amount;
+    setVolume(volume);
+}
+
+void PlayerControls::decreaseVolume(int amount) {
+    // Make sure volume slider has focus so we can change it's value
+    m_volumeSlider->setFocus();
+    const int c_volume = volume();
+    int volume = (c_volume - amount) <= 0 ? 0 : c_volume - amount;
+    std::cout << volume << std::endl;
+    std::cout << c_volume << std::endl;
+    setVolume(volume);
+}
+
 bool PlayerControls::isMuted() const
 {
     return m_playerMuted;
@@ -115,6 +135,12 @@ void PlayerControls::setMuted(bool muted)
                 ? QStyle::SP_MediaVolumeMuted
                 : QStyle::SP_MediaVolume));
     }
+}
+
+void PlayerControls::togglePlayPause(){
+    // Make sure that the whole player app has focus so the play/pause works properly
+    this->setFocus();
+    playClicked();
 }
 
 void PlayerControls::playClicked()
