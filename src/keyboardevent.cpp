@@ -1,7 +1,6 @@
 #include "keyboardevent.h"
 
 #include "playercontrols.h"
-#include <iostream>
 
 #include <QApplication>
 #include <QMediaPlayer>
@@ -21,10 +20,7 @@ bool KeyboardEvent::eventFilter(QObject* obj, QEvent* event)
     // so we don't need to handle them in here
 
     if (event->type()==QEvent::KeyRelease){
-        std::cout << "Key pressed" << std::endl;
         QKeyEvent* key = static_cast<QKeyEvent*>(event);
-        std::cout << key->key() << std::endl;
-
         switch (key->key())
         {
             case Qt::Key_Space:

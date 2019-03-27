@@ -101,8 +101,6 @@ void PlayerControls::setVolume(int volume)
     m_volumeSlider->setValue(qRound(logarithmicVolume * 100));
 }
 
-#include <iostream>
-
 void PlayerControls::increaseVolume(int amount) {
     // Make sure volume slider has focus so we can change it's value
     m_volumeSlider->setFocus();
@@ -116,8 +114,6 @@ void PlayerControls::decreaseVolume(int amount) {
     m_volumeSlider->setFocus();
     const int c_volume = volume();
     int volume = (c_volume - amount) <= 0 ? 0 : c_volume - amount;
-    std::cout << volume << std::endl;
-    std::cout << c_volume << std::endl;
     setVolume(volume);
 }
 
