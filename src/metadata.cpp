@@ -27,20 +27,20 @@ void Metadata::parseData()
     }
 
     while ((tag = av_dict_get(fmt_ctx->metadata, "", tag, AV_DICT_IGNORE_SUFFIX))){
-        if (QString(tag->key) == "ALBUM") {
+        QString key = QString(tag->key);
+        if (key == "ALBUM" || key == "key") {
             album = QString(tag->value);
-        } else if (QString(tag->key) == "ARTIST") {
+        } else if (key == "ARTIST" || key == "artist") {
             artist = QString(tag->value);
-        } else if (QString(tag->key) == "DATE") {
+        } else if (key == "DATE" || key == "date") {
             date = QString(tag->value);
-        } else if (QString(tag->key) == "GENRE") {
+        } else if (key == "GENRE" || key == "genre") {
             genre = QString(tag->value);
-        } else if (QString(tag->key) == "TITLE") {
+        } else if (key == "TITLE" || key == "title") {
             title = QString(tag->value);
-        } else if (QString(tag->key) == "track") {
-            // track seems to be the only item is constantly lowercase
+        } else if (key == "track" || key == "track") {
             track = QString(tag->value);
-        } else if (QString(tag->key) == "TRACKTOTAL") {
+        } else if (key == "TRACKTOTAL" || key == "tracktotal") {
             trackTotal = QString(tag->value);
         }
     }
